@@ -7,11 +7,15 @@ const server = http.createServer(async (req, res) => {
   const destination = await getDataFromDB();
 
   if (req.url === "/api" && req.method === "GET") {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 200;
+
     res.write("This is from the server\n");
     res.write("Request URL: " + req.url + "\n");
     res.write("Request Method: " + req.method + "\n");
     res.write("Request Status Code: " + req.statusCode + "\n");
     res.write("Requested Data:\n");
+
     res.end(JSON.stringify(destination), () => {
       console.log("A Request Has Been Ended");
     });
