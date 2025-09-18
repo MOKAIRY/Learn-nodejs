@@ -19,10 +19,29 @@ const server = http.createServer(async (req, res) => {
     res.end(JSON.stringify(destination), () => {
       console.log("A Request Has Been Ended");
     });
-  } else {
-    res.end("Bad URL", () => {
-      console.log("A Bad Request Has Been Ended");
+  } else if (req.url.startsWith("/api/continent") && req.method === "GET") {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 200;
+    const continent = req.url.split("/").pop();
+    const filteredData = destination.filter((destination) => {
+      return (
+        destination.continent.toLocaleLowerCase() ===
+        continent.toLocaleLowerCase()
+      );
     });
+    res.end(JSON.stringify(filteredData));
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 404;
+    res.end(
+      JSON.stringify({
+        error: "not Found",
+        message: "The requested route does not exist",
+      }),
+      () => {
+        console.log("A Bad Request Has Been Ended");
+      }
+    );
   }
 });
 
